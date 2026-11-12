@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Girl</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&family=Shippori+Mincho&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffec70;
+            color: #2c281e;
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background-color: #ffec70;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .enter-btn {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1.5rem;
+            letter-spacing: 0.08em;
+            color: #2c281e;
+            background: transparent;
+            border: 1px solid rgba(44, 40, 30, 0.35);
+            padding: 12px 32px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enter-btn:hover {
+            background-color: rgba(44, 40, 30, 0.06);
+            border-color: #2c281e;
+            transform: scale(1.03);
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .video-wrapper {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(184, 158, 20, 0.25);
+            border: 1px solid rgba(44, 40, 30, 0.12);
+            background-color: #f7e159;
+            margin-bottom: 28px;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .quotes {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .quote-jp {
+            font-family: 'Shippori Mincho', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            letter-spacing: 0.15em;
+            opacity: 0.85;
+        }
+
+        .quote-en {
+            font-size: 1.35rem;
+            letter-spacing: 0.03em;
+        }
+
+        .quote-tr {
+            font-size: 1.25rem;
+            letter-spacing: 0.02em;
+            opacity: 0.9;
+        }
+
+        .symbols {
+            margin-top: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            font-style: normal;
+            font-size: 1rem;
+            line-height: 1.15;
+            color: #2c281e;
+            opacity: 0.85;
+            user-select: none;
+        }
+
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(44, 40, 30, 0.15);
+            color: #2c281e;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 50;
+            transition: all 0.2s ease;
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="startExperience()">
+        <button class="enter-btn">✦ tap to enter</button>
+    </div>
+
+    <button class="music-toggle" id="musicBtn" onclick="toggleMusic()">♪ playing</button>
+
+    <main class="container" id="mainContent">
+        <div class="video-wrapper">
+            <video id="bgVideo" src="video.mp4" loop muted playsinline></video>
+        </div>
+
+        <div class="quotes">
+            <p class="quote-jp">夢の中で</p>
+            <p class="quote-en">Lost in a daydream.</p>
+            <p class="quote-tr">Bir gündüz düşünün içinde.</p>
+        </div>
+
+        <div class="symbols">
+            <span>. ݁₊ ⊹ . ݁ ⟡ ݁ . ⊹ ₊ ݁.</span>
+            <span>꒰১ ໒꒱</span>
+        </div>
+    </main>
+
+    <audio id="bgMusic" src="sarki.mp3" loop></audio>
+
+    <script>
+        const video = document.getElementById('bgVideo');
+        const music = document.getElementById('bgMusic');
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('mainContent');
+        const musicBtn = document.getElementById('musicBtn');
+
+        function startExperience() {
+            overlay.classList.add('hidden');
+            mainContent.classList.add('visible');
+            
+            video.play();
+            music.volume = 0.7;
+            music.play().catch(err => console.log("Ses başlatılamadı:", err));
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.textContent = "♪ playing";
+            } else {
+                music.pause();
+                musicBtn.textContent = "♪ paused";
+            }
+        }
+    </script>
+
+</body>
+</html>
