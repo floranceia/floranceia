@@ -221,6 +221,21 @@
                 musicBtn.textContent = "♪ paused";
             }
         }
+
+        // Sayfadan veya sekmeden çıkıldığında müziği ve videoyu otomatik durdurur
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                music.pause();
+                video.pause();
+            } else {
+                if (!overlay.classList.contains('hidden')) {
+                    video.play();
+                    if (!music.paused) {
+                        music.play();
+                    }
+                }
+            }
+        });
     </script>
 
 </body>
